@@ -819,10 +819,44 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 
+
+
+
+
+<script>
+// Debug script to see what's making it required
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Form loaded - checking requirements');
+    
+    const checkboxStep = document.querySelector('[data-checkbox="1"]');
+    const checkboxes = checkboxStep.querySelectorAll('input[type="checkbox"]');
+    
+    checkboxes.forEach((checkbox, index) => {
+        console.log(`Checkbox ${index + 1}:`, {
+            required: checkbox.required,
+            hasRequiredAttr: checkbox.hasAttribute('required'),
+            validationMessage: checkbox.validationMessage
+        });
+    });
+    
+    // Try to force enable the next button
+    const nextBtn = checkboxStep.querySelector('[data-form="next-btn"]');
+    if (nextBtn) {
+        nextBtn.style.pointerEvents = 'auto';
+        nextBtn.style.opacity = '1';
+    }
+});
+</script>
+    
+    
+
+    
+
 <!--Rmove if not worked-->
 
 </body>
 
 
 </html>
+
 
