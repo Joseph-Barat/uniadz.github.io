@@ -697,7 +697,166 @@
 
 
 
-<script src="https://cdn.jsdelivr.net/gh/videsigns/webflow-tools@latest/multi-step.js"> </script>
+<script>
+// Simple multi-step form with disabled next buttons until required fields are filled
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('wf-form-Wailtist-Form');
+    const steps = Array.from(form.querySelectorAll('[data-form="step"]'));
+    
+    // Show first step, hide others
+    steps.forEach((step, index) => {
+        step.style.display = index === 0 ? 'block' : 'none';
+    });
+    
+    // Initialize next button states
+    updateNextButtonStates();
+    
+    // Next button functionality
+    form.querySelectorAll('[data-form="next-btn"]').forEach(button => {
+        button.addEventListener('click', function(e) {
+            if (this.classList.contains('disabled')) {
+                e.preventDefault();
+                return;
+            }
+            
+            e.preventDefault();
+            const currentStep = this.closest('[data-form="step"]');
+            const currentIndex = steps.indexOf(currentStep);
+            const nextStep = steps[currentIndex + 1];
+            
+            if (nextStep) {
+                currentStep.style.display = 'none';
+                nextStep.style.display = 'block';
+                updateNextButtonStates();
+            }
+        });
+    });
+    
+    // Back button functionality  
+    form.querySelectorAll('[data-form="back-btn"]').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const currentStep = this.closest('[data-form="step"]');
+            const currentIndex = steps.indexOf(currentStep);
+            const prevStep = steps[currentIndex - 1];
+            
+            if (prevStep) {
+                currentStep.style.display = 'none';
+                prevStep.style.display = 'block';
+                updateNextButtonStates();
+            }
+        });
+    });
+    
+    // Function to update next button states based on field validation
+    function updateNextButtonStates() {
+        steps.forEach((step, index) => {
+            const nextBtn = step.querySelector('[data-form="next-btn"]');
+            if (!nextBtn) return;
+            
+            // Step 2 is always enabled (optional)
+            if (index === 1) {
+                enableButton(nextBtn);
+                return;
+            }
+            
+            // Step 1: Check name and email
+            if (index === 0) {
+                const nameInput = step.querySelector('#name');
+                const emailInput = step.querySelector('#email');
+                const isStep1Valid = nameInput.value.trim() && isValidEmail(emailInput.value);
+                
+                if (isStep1Valid) {
+                    enableButton(nextBtn);
+                } else {
+                    disableButton(nextBtn);
+                }
+            }
+            
+            // Step 3: Check all price fields
+            if (index === 2) {
+                const priceInputs = step.querySelectorAll('input[type="text"]');
+                let isStep3Valid = true;
+                
+                priceInputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        isStep3Valid = false;
+                    }
+                });
+                
+                if (isStep3Valid) {
+                    enableButton(nextBtn);
+                } else {
+                    disableButton(nextBtn);
+                }
+            }
+        });
+    }
+    
+    // Function to disable button
+    function disableButton(button) {
+        button.classList.add('disabled');
+        button.style.opacity = '0.7';
+        button.style.pointerEvents = 'none';
+        button.style.cursor = 'not-allowed';
+    }
+    
+    // Function to enable button
+    function enableButton(button) {
+        button.classList.remove('disabled');
+        button.style.opacity = '1';
+        button.style.pointerEvents = 'auto';
+        button.style.cursor = 'pointer';
+    }
+    
+    // Email validation helper
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+    
+    // Add input event listeners to update button states in real-time
+    steps.forEach((step, index) => {
+        // Step 1 inputs
+        if (index === 0) {
+            const nameInput = step.querySelector('#name');
+            const emailInput = step.querySelector('#email');
+            
+            [nameInput, emailInput].forEach(input => {
+                input.addEventListener('input', updateNextButtonStates);
+            });
+        }
+        
+        // Step 3 inputs
+        if (index === 2) {
+            const priceInputs = step.querySelectorAll('input[type="text"]');
+            priceInputs.forEach(input => {
+                input.addEventListener('input', updateNextButtonStates);
+            });
+        }
+    });
+    
+    // Update step 2 to be optional
+    const step2 = steps[1];
+    if (step2) {
+        const optionalText = step2.querySelector('.heading-27-sub');
+        if (optionalText) {
+            optionalText.innerHTML = "What describes you the best?<br /><span style='color:#666; font-style:italic;'>(Optional - Skip if not applicable)</span>";
+        }
+        
+        // Step 2 next button is always enabled
+        const step2NextBtn = step2.querySelector('[data-form="next-btn"]');
+        if (step2NextBtn) {
+            enableButton(step2NextBtn);
+        }
+    }
+    
+    // Initialize step 1 next button as disabled
+    const step1NextBtn = steps[0].querySelector('[data-form="next-btn"]');
+    if (step1NextBtn) {
+        disableButton(step1NextBtn);
+    }
+});
+</script>
 
 
 
@@ -779,6 +938,7 @@ document.getElementById('wf-form-Wailtist-Form').addEventListener('submit', hand
 
 
 </html>
+
 
 
 
