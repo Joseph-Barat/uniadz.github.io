@@ -773,90 +773,12 @@ document.getElementById('wf-form-Wailtist-Form').addEventListener('submit', hand
 
 
 
-<!--Rmove if not worked-->
 
-<script>
-// Override the multi-step form validation for checkbox section
-document.addEventListener('DOMContentLoaded', function() {
-    // Wait a bit for the multi-step form to initialize
-    setTimeout(function() {
-        const form = document.getElementById('wf-form-Wailtist-Form');
-        const checkboxStep = document.querySelector('[data-checkbox="1"]');
-        
-        // Find the next button in the checkbox step
-        const nextBtn = checkboxStep.querySelector('[data-form="next-btn"]');
-        
-        if (nextBtn) {
-            // Remove any existing click events and add our own
-            nextBtn.replaceWith(nextBtn.cloneNode(true));
-            const newNextBtn = checkboxStep.querySelector('[data-form="next-btn"]');
-            
-            newNextBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // Simply move to next step without validation
-                checkboxStep.style.display = 'none';
-                const nextStep = checkboxStep.nextElementSibling;
-                if (nextStep && nextStep.classList.contains('form-step')) {
-                    nextStep.style.display = 'block';
-                }
-            });
-        }
-        
-        // Also update the text to show it's optional
-        const subtitle = checkboxStep.querySelector('.heading-27-sub');
-        if (subtitle) {
-            subtitle.innerHTML = "What describes you the best?<br /><em>(Optional - Maximum 2 answers)</em>";
-        }
-        
-        const otherTextarea = document.getElementById('other');
-        if (otherTextarea) {
-            otherTextarea.placeholder = "Text Input (Optional)";
-        }
-    }, 1000);
-});
-</script>
-
-
-
-
-
-
-<script>
-// Debug script to see what's making it required
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Form loaded - checking requirements');
-    
-    const checkboxStep = document.querySelector('[data-checkbox="1"]');
-    const checkboxes = checkboxStep.querySelectorAll('input[type="checkbox"]');
-    
-    checkboxes.forEach((checkbox, index) => {
-        console.log(`Checkbox ${index + 1}:`, {
-            required: checkbox.required,
-            hasRequiredAttr: checkbox.hasAttribute('required'),
-            validationMessage: checkbox.validationMessage
-        });
-    });
-    
-    // Try to force enable the next button
-    const nextBtn = checkboxStep.querySelector('[data-form="next-btn"]');
-    if (nextBtn) {
-        nextBtn.style.pointerEvents = 'auto';
-        nextBtn.style.opacity = '1';
-    }
-});
-</script>
-    
-    
-
-    
-
-<!--Rmove if not worked-->
 
 </body>
 
 
 </html>
+
 
 
