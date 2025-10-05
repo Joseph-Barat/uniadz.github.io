@@ -773,13 +773,63 @@ document.getElementById('wf-form-Wailtist-Form').addEventListener('submit', hand
 
 
 
+<!--Rmove if not worked-->
+
+<script>
+// Make checkbox section optional
+document.addEventListener('DOMContentLoaded', function() {
+    // Remove checkbox validation
+    const checkboxSection = document.querySelector('[data-checkbox="1"]');
+    const checkboxes = checkboxSection.querySelectorAll('input[type="checkbox"]');
+    const otherTextarea = document.getElementById('other');
+    
+    // Remove any required attributes or validation
+    checkboxes.forEach(checkbox => {
+        checkbox.removeAttribute('required');
+    });
+    
+    // Make the "Other" textarea optional too
+    if (otherTextarea) {
+        otherTextarea.removeAttribute('required');
+        otherTextarea.placeholder = "Text Input (Optional)";
+    }
+    
+    // Update the subtitle to indicate it's optional
+    const subtitle = checkboxSection.querySelector('.heading-27-sub');
+    if (subtitle) {
+        subtitle.textContent = "What describes you the best?\n(Optional - Maximum 2 answers)";
+    }
+});
+
+// Also update the multi-step form validation if needed
+// Add this to your existing multi-step.js or include it separately
+document.addEventListener('multiStepFormReady', function() {
+    // This will allow proceeding without selecting any checkboxes
+    const formSteps = document.querySelectorAll('[data-form="step"]');
+    formSteps.forEach(step => {
+        const nextBtn = step.querySelector('[data-form="next-btn"]');
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function() {
+                // Always allow proceeding to next step
+                // The form validation will be handled on final submit
+                const form = document.getElementById('wf-form-Wailtist-Form');
+                const currentStep = form.querySelector('.form-step[style*="display: block"]');
+                const nextStep = currentStep.nextElementSibling;
+                
+                if (nextStep && nextStep.classList.contains('form-step')) {
+                    currentStep.style.display = 'none';
+                    nextStep.style.display = 'block';
+                }
+            });
+        }
+    });
+});
+</script>
 
 
-
-
-
-
+<!--Rmove if not worked-->
 
 </body>
+
 
 </html>
